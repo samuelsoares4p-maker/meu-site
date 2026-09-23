@@ -42,7 +42,6 @@
   }
   ::selection{background:rgba(185,162,132,.28);color:#fff}
 
-  /* grão de filme global */
   body::before{
     content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
     opacity:.035;mix-blend-mode:overlay;
@@ -54,10 +53,8 @@
   a{color:inherit;text-decoration:none}
   img{max-width:100%;display:block}
 
-  /* .wrap é a régua única de alinhamento */
   .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
 
-  /* ---------- RAIL LATERAL ---------- */
   .rail{
     position:fixed;left:24px;top:50%;transform:translateY(-50%);
     z-index:60;display:flex;flex-direction:column;align-items:center;gap:14px;
@@ -73,7 +70,6 @@
     color:var(--fg-3);letter-spacing:.05em;writing-mode:vertical-rl;
   }
 
-  /* ---------- NAV ---------- */
   header{
     position:fixed;top:0;left:0;right:0;z-index:100;
     background:rgba(10,10,11,.55);
@@ -117,9 +113,6 @@
   }
   .mobile-menu a:last-child{border-bottom:0}
 
-  /* =========================================================
-     HERO COM BANNER FULL-BLEED
-     ========================================================= */
   .hero{
     position:relative;
     min-height:100vh;
@@ -132,7 +125,6 @@
     border-top:0;
   }
 
-  /* camada de fundo: cobre a seção inteira, canto a canto */
   .hero-bg{
     position:absolute;
     inset:0;
@@ -142,10 +134,6 @@
       #08080a;
   }
 
-  /* ---------- A IMAGEM DO BANNER ----------
-     Troque APENAS o atributo src abaixo.
-     object-fit:cover garante que ela preencha sem distorcer.
-     object-position controla o enquadramento (center, top, right…). */
   .hero-bg img{
     width:100%;
     height:100%;
@@ -153,11 +141,10 @@
     object-position:center;
     display:block;
     transition:opacity .15s linear,transform .15s linear;
-    /* leve dessaturação para casar com a paleta sóbria */
+
     filter:saturate(.9) contrast(1.02);
   }
 
-  /* scrim: escurece onde o texto fica, revela a imagem do lado direito */
   .hero-overlay{
     position:absolute;inset:0;
     z-index:1;
@@ -175,7 +162,6 @@
         rgba(10,10,11,.10) 100%);
   }
 
-  /* grid de pontos sobreposto, sutil */
   .hero-dots{
     position:absolute;inset:0;z-index:2;pointer-events:none;
     background-image:radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
@@ -315,7 +301,6 @@
   }
   .catalog-link:hover{background:var(--fg);border-color:var(--fg);color:var(--bg)}
 
-  /* scroll cue */
   .scroll-cue{
     position:absolute;left:50%;bottom:28px;transform:translateX(-50%);
     z-index:4;
@@ -339,7 +324,6 @@
     100%{transform:translateY(36px);opacity:0}
   }
 
-  /* ---------- SEÇÕES ---------- */
   section{padding:var(--sec-y) 0;border-top:1px solid var(--line);position:relative}
   .sec-head{margin-bottom:var(--head-gap)}
   .sec-label{
@@ -359,7 +343,6 @@
     line-height:1.7;
   }
 
-  /* ---------- BIO ---------- */
   .bio-grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:760px}
   .bio-grid p{color:var(--fg-2);font-weight:300;font-size:16px;line-height:1.75}
   .bio-grid p strong{color:var(--fg);font-weight:500}
@@ -380,7 +363,6 @@
     color:var(--fg-3);letter-spacing:.02em;
   }
 
-  /* ---------- SERVIÇOS ---------- */
   .services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
   .service{
     background:var(--panel);border:1px solid var(--line);
@@ -422,7 +404,6 @@
     font-style:italic;line-height:1.5;
   }
 
-  /* ---------- SKILLS ---------- */
   .skills{
     display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;
@@ -437,7 +418,6 @@
   .skill .level{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--fg-3)}
   .skill p{font-size:13.5px;color:var(--fg-2);font-weight:300;line-height:1.65}
 
-  /* ---------- TRAJETÓRIA ---------- */
   .timeline{max-width:860px}
   .tl-item{
     display:grid;grid-template-columns:76px 1fr;gap:26px;
@@ -466,7 +446,6 @@
     max-width:640px;
   }
 
-  /* ---------- NÚMEROS ---------- */
   .numbers{
     display:grid;grid-template-columns:repeat(6,1fr);gap:1px;
     background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;
@@ -491,7 +470,6 @@
     color:var(--fg-3);line-height:1.5;margin-top:auto;
   }
 
-  /* ---------- DEPOIMENTOS ---------- */
   .quotes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
   .quote{
     background:var(--panel);border:1px solid var(--line);
@@ -516,7 +494,6 @@
   }
   .quote footer strong{color:var(--fg-2);font-weight:500}
 
-  /* ---------- CONTATO ---------- */
   .contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start}
   .contact-list{display:flex;flex-direction:column}
   .contact-item{
@@ -547,7 +524,6 @@
   }
   .contact-cta .btn{width:100%;justify-content:center;position:relative}
 
-  /* ---------- FOOTER ---------- */
   footer.site{border-top:1px solid var(--line);padding:36px 0 44px;position:relative}
   .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
   .foot-inner p{
@@ -556,7 +532,6 @@
   }
   .foot-inner .best{color:var(--fg-2)}
 
-  /* ---------- REVEAL ---------- */
   .reveal{
     opacity:0;transform:translateY(14px);
     transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
@@ -570,7 +545,6 @@
     html{scroll-behavior:auto}
   }
 
-  /* ---------- RESPONSIVE ---------- */
   @media (max-width:1180px){
     .rail{display:none}
   }
@@ -588,7 +562,7 @@
     .mobile-menu{display:block}
     .hero{min-height:auto;padding:120px 0 96px}
     .hero-banner{position:relative;right:auto;bottom:auto;width:auto;min-height:0;margin:42px var(--pad) 0}
-    /* em telas pequenas o scrim fica mais forte para o texto respirar */
+
     .hero-overlay{
       background:
         linear-gradient(180deg,
@@ -612,7 +586,6 @@
 </head>
 <body>
 
-<!-- rail de progresso -->
 <aside class="rail" aria-hidden="true">
   <span class="pct">SCROLL</span>
   <div class="track"><div class="fill" id="railFill"></div></div>
@@ -649,18 +622,8 @@
   <a href="#contato">Contato</a>
 </div>
 
-<!-- ===================== HERO ===================== -->
 <section class="hero">
 
-  <!-- =====================================================================
-       BANNER DO HERO — FULL-BLEED
-       Troque apenas o atributo src da tag <img> abaixo pela sua arte.
-       Ex.: <img src="banner.jpg" alt="">
-            <img src="https://imgs.search.brave.com/3a7oodGT3hmZrOuXYtI1f2DBiOXSmCLYv7HeTQKzhP0/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L2ZvdG9zLXByZW1p/dW0vYW5pbWUtZ2ly/bC1lbS1lc3RpbG8t/ZGUtYXJ0ZS1wcmV0/by1lLWJyYW5jb18x/MTUwMDI1LTY2NTY0/LmpwZz9zZW10PWFp/c19oeWJyaWQmdz03/NDAmcT04MA" alt="">
-       A imagem preenche a seção inteira (canto a canto) sem distorcer.
-       object-position controla o enquadramento (center, top, right…).
-       O placeholder atual é um SVG embutido — não quebra se você não mexer.
-       ===================================================================== -->
   <div class="hero-bg">
     <img
       src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1800&q=85"
@@ -709,7 +672,6 @@
   </div>
 </section>
 
-<!-- ===================== BIO ===================== -->
 <section id="bio">
   <div class="wrap">
     <div class="sec-head">
@@ -744,7 +706,6 @@
   </div>
 </section>
 
-<!-- ===================== SERVIÇOS ===================== -->
 <section id="servicos">
   <div class="wrap">
     <div class="sec-head">
@@ -821,7 +782,6 @@
   </div>
 </section>
 
-<!-- ===================== SKILLS ===================== -->
 <section id="skills">
   <div class="wrap">
     <div class="sec-head">
@@ -865,7 +825,6 @@
   </div>
 </section>
 
-<!-- ===================== TRAJETÓRIA ===================== -->
 <section id="trajetoria">
   <div class="wrap">
     <div class="sec-head">
@@ -930,7 +889,6 @@
   </div>
 </section>
 
-<!-- ===================== PROJETOS ===================== -->
 <section id="projetos">
   <div class="wrap">
     <div class="sec-head">
@@ -1021,7 +979,6 @@
   </div>
 </section>
 
-<!-- ===================== DEPOIMENTOS ===================== -->
 <section id="depoimentos">
   <div class="wrap">
     <div class="sec-head">
@@ -1053,7 +1010,6 @@
   </div>
 </section>
 
-<!-- ===================== CONTATO ===================== -->
 <section id="contato">
   <div class="wrap">
     <div class="sec-head">
@@ -1107,13 +1063,12 @@
 </footer>
 
 <script>
-  // header border on scroll
+
   const nav = document.getElementById('nav');
   const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
   onScroll();
   window.addEventListener('scroll', onScroll, {passive:true});
 
-  // Reduz levemente a foto conforme o hero sai da tela, sem apaga-la.
   const hero = document.querySelector('.hero');
   const heroImage = document.querySelector('.hero-bg img');
   const updateHeroImage = () => {
@@ -1124,7 +1079,6 @@
   updateHeroImage();
   window.addEventListener('scroll', updateHeroImage, {passive:true});
 
-  // mobile menu
   const menuBtn = document.getElementById('menuBtn');
   const mobileMenu = document.getElementById('mobileMenu');
   menuBtn.addEventListener('click', () => {
@@ -1138,7 +1092,6 @@
     })
   );
 
-  // reveal on scroll
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1150,7 +1103,6 @@
 
   document.querySelectorAll('.reveal').forEach(el => io.observe(el));
 
-  // rail de progresso
   const railFill = document.getElementById('railFill');
   const railPct  = document.getElementById('railPct');
   const updateRail = () => {
