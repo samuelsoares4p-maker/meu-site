@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Samuel Soares — Full Stack · Automação · Security</title>
+<meta name="description" content="Desenvolvedor full stack com mais de 7 anos de experiência em sites, sistemas, automações e segurança.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0b;
+    --bg-2:#0c0c0e;
+    --panel:#0e0e10;
+    --line:#1b1b1f;
+    --line-2:#2a2a30;
+    --fg:#ececec;
+    --fg-2:#9a9aa2;
+    --fg-3:#5f5f68;
+    --accent:#b9a284;
+    --green:#3fb950;
+    --max:1120px;
+    --pad:32px;
+    --sec-y:100px;
+    --head-gap:52px;
+  }
+
+  *{margin:0;padding:0;box-sizing:border-box}
+  html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+  body{
+    background:var(--bg);
+    color:var(--fg);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
+    font-size:16px;
+    line-height:1.65;
+    font-weight:400;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+    overflow-x:hidden;
+    position:relative;
+  }
+  ::selection{background:rgba(185,162,132,.28);color:#fff}
+
+  /* grão de filme global */
+  body::before{
+    content:'';position:fixed;inset:0;z-index:1;pointer-events:none;
+    opacity:.035;mix-blend-mode:overlay;
+    background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 1 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  }
+
+  .mono{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:400}
+
+  a{color:inherit;text-decoration:none}
+  img{max-width:100%;display:block}
+
+  /* .wrap é a régua única de alinhamento */
+  .wrap{max-width:var(--max);margin:0 auto;padding:0 var(--pad)}
+
+  /* ---------- RAIL LATERAL ---------- */
+  .rail{
+    position:fixed;left:24px;top:50%;transform:translateY(-50%);
+    z-index:60;display:flex;flex-direction:column;align-items:center;gap:14px;
+    pointer-events:none;
+  }
+  .rail .track{width:1px;height:180px;background:var(--line-2);position:relative;overflow:hidden}
+  .rail .fill{
+    position:absolute;top:0;left:0;width:100%;height:0%;
+    background:var(--accent);transition:height .15s linear;
+  }
+  .rail .pct{
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    color:var(--fg-3);letter-spacing:.05em;writing-mode:vertical-rl;
+  }
+
+  /* ---------- NAV ---------- */
+  header{
+    position:fixed;top:0;left:0;right:0;z-index:100;
+    background:rgba(10,10,11,.55);
+    backdrop-filter:blur(14px) saturate(140%);
+    -webkit-backdrop-filter:blur(14px) saturate(140%);
+    border-bottom:1px solid transparent;
+    transition:border-color .3s ease, background .3s ease;
+  }
+  header.scrolled{border-bottom-color:var(--line);background:rgba(10,10,11,.82)}
+  .nav-inner{height:64px;display:flex;align-items:center;justify-content:space-between;gap:24px}
+  .brand{
+    display:flex;align-items:center;gap:8px;
+    font-family:'JetBrains Mono',monospace;font-size:14px;letter-spacing:-.01em;
+    color:var(--fg);font-weight:500;
+  }
+  .brand .at{color:var(--accent)}
+  .nav-links{display:flex;align-items:center;gap:28px}
+  .nav-links a{
+    font-size:13.5px;color:var(--fg-2);font-weight:400;
+    position:relative;padding:4px 0;transition:color .2s ease;
+  }
+  .nav-links a::after{
+    content:'';position:absolute;left:0;right:100%;bottom:0;height:1px;
+    background:var(--accent);transition:right .3s cubic-bezier(.16,1,.3,1);
+  }
+  .nav-links a:hover{color:var(--fg)}
+  .nav-links a:hover::after{right:0}
+  .menu-btn{display:none;background:none;border:0;color:var(--fg-2);cursor:pointer;padding:8px}
+  .menu-btn svg{display:block}
+  .mobile-menu{
+    display:none;position:fixed;inset:64px 0 auto 0;background:var(--bg);
+    border-bottom:1px solid var(--line);z-index:99;
+    padding:16px var(--pad) 28px;
+    transform:translateY(-8px);opacity:0;pointer-events:none;
+    transition:opacity .2s ease, transform .2s ease;
+  }
+  .mobile-menu.open{opacity:1;transform:none;pointer-events:auto}
+  .mobile-menu a{
+    display:block;padding:12px 0;font-size:15px;color:var(--fg-2);
+    border-bottom:1px solid var(--line);
+  }
+  .mobile-menu a:last-child{border-bottom:0}
+
+  /* =========================================================
+     HERO COM BANNER FULL-BLEED
+     ========================================================= */
+  .hero{
+    position:relative;
+    min-height:100vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    padding:150px 0 110px;
+    overflow:hidden;
+    isolation:isolate;
+    border-top:0;
+  }
+
+  /* camada de fundo: cobre a seção inteira, canto a canto */
+  .hero-bg{
+    position:absolute;
+    inset:0;
+    z-index:0;
+    background:
+      radial-gradient(ellipse 60% 50% at 20% 20%, rgba(185,162,132,.10), transparent 60%),
+      #08080a;
+  }
+
+  /* ---------- A IMAGEM DO BANNER ----------
+     Troque APENAS o atributo src abaixo.
+     object-fit:cover garante que ela preencha sem distorcer.
+     object-position controla o enquadramento (center, top, right…). */
+  .hero-bg img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+    object-position:center;
+    display:block;
+    transition:opacity .15s linear,transform .15s linear;
+    /* leve dessaturação para casar com a paleta sóbria */
+    filter:saturate(.9) contrast(1.02);
+  }
+
+  /* scrim: escurece onde o texto fica, revela a imagem do lado direito */
+  .hero-overlay{
+    position:absolute;inset:0;
+    z-index:1;
+    pointer-events:none;
+    background:
+      linear-gradient(180deg,
+        rgba(10,10,11,.72) 0%,
+        rgba(10,10,11,.30) 26%,
+        rgba(10,10,11,.42) 62%,
+        var(--bg) 100%),
+      linear-gradient(90deg,
+        rgba(10,10,11,.94) 0%,
+        rgba(10,10,11,.78) 30%,
+        rgba(10,10,11,.38) 62%,
+        rgba(10,10,11,.10) 100%);
+  }
+
+  /* grid de pontos sobreposto, sutil */
+  .hero-dots{
+    position:absolute;inset:0;z-index:2;pointer-events:none;
+    background-image:radial-gradient(rgba(255,255,255,.055) 1px, transparent 1px);
+    background-size:26px 26px;
+    mask-image:radial-gradient(ellipse 78% 68% at 30% 40%, #000 26%, transparent 76%);
+    -webkit-mask-image:radial-gradient(ellipse 78% 68% at 30% 40%, #000 26%, transparent 76%);
+  }
+
+  .hero-content{
+    position:relative;
+    z-index:3;
+    width:100%;
+  }
+
+  .eyebrow{
+    display:inline-flex;align-items:center;gap:9px;
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;
+    color:var(--fg-2);letter-spacing:.02em;
+    padding:6px 12px;border:1px solid rgba(255,255,255,.10);border-radius:999px;
+    margin-bottom:30px;
+    background:rgba(14,14,16,.45);
+    backdrop-filter:blur(8px);
+  }
+  .dot{
+    width:6px;height:6px;border-radius:50%;background:#000;
+    box-shadow:0 0 0 3px rgba(0,0,0,.16);
+    animation:pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.45}}
+
+  h1{
+    font-size:clamp(2.6rem,6.4vw,4.4rem);
+    line-height:1.02;letter-spacing:-.04em;font-weight:500;
+    margin-bottom:20px;
+    max-width:14ch;
+  }
+  h1 .title-subtitle{
+    display:block;color:var(--accent);font-style:italic;
+    font-size:.68em;line-height:1.15;margin-top:10px;
+  }
+  .hero-signature{
+    margin-bottom:18px;color:var(--accent);
+    font-family:'JetBrains Mono',monospace;font-size:13px;
+    letter-spacing:.02em;
+  }
+  .role{
+    font-family:'JetBrains Mono',monospace;
+    font-size:clamp(.85rem,1.5vw,1rem);
+    color:var(--fg-2);letter-spacing:.01em;
+    margin-bottom:26px;
+  }
+  .role .sep{color:var(--fg-3);margin:0 6px}
+
+  .lead{
+    font-size:clamp(1rem,1.7vw,1.1rem);
+    color:var(--fg-2);max-width:560px;line-height:1.7;
+    font-weight:300;margin-bottom:38px;
+  }
+  .lead strong{color:var(--fg);font-weight:500}
+
+  .hero-cta{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:40px}
+
+  .btn{
+    display:inline-flex;align-items:center;gap:8px;
+    padding:12px 22px;border-radius:8px;
+    font-size:14px;font-weight:500;letter-spacing:-.005em;
+    background:var(--fg);color:#0a0a0b;border:1px solid var(--fg);
+    transition:opacity .2s ease, transform .15s ease, background .2s, color .2s, border-color .2s;
+    cursor:pointer;
+  }
+  .btn:hover{opacity:.86}
+  .btn:active{transform:translateY(1px)}
+  .btn-ghost{
+    background:rgba(14,14,16,.4);color:var(--fg-2);
+    border:1px solid rgba(255,255,255,.14);
+    backdrop-filter:blur(8px);
+  }
+  .btn-ghost:hover{color:var(--fg);border-color:rgba(255,255,255,.28);opacity:1}
+  .btn .arrow{transition:transform .25s cubic-bezier(.16,1,.3,1)}
+  .btn:hover .arrow{transform:translateX(3px)}
+
+  .stack{display:flex;flex-wrap:wrap;gap:8px}
+  .stack span{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--fg-3);padding:5px 10px;
+    border:1px solid rgba(255,255,255,.09);border-radius:6px;
+    background:rgba(14,14,16,.4);
+    backdrop-filter:blur(6px);
+    transition:color .2s ease, border-color .2s ease;
+  }
+  .stack span:hover{color:var(--fg-2);border-color:rgba(255,255,255,.20)}
+
+  .hero-banner{
+    position:absolute;right:clamp(22px,7vw,100px);bottom:clamp(92px,13vh,140px);
+    z-index:3;width:min(360px,31vw);min-height:215px;padding:24px;
+    border:1px solid rgba(255,255,255,.16);border-radius:10px;
+    background:rgba(14,14,16,.58);backdrop-filter:blur(12px) saturate(120%);
+    box-shadow:0 20px 60px rgba(0,0,0,.28);
+    transition:opacity .35s ease,transform .35s ease;
+  }
+  .hero-banner.is-hidden{opacity:0;transform:translateY(-24px);pointer-events:none}
+  .hero-banner::before{
+    content:'';position:absolute;top:-1px;left:24px;width:62px;height:2px;
+    background:var(--accent);
+  }
+  .hero-banner-label{
+    display:block;margin-bottom:18px;color:var(--accent);
+    font-family:'JetBrains Mono',monospace;font-size:10px;
+    letter-spacing:.14em;text-transform:uppercase;
+  }
+  .hero-banner h2{margin-bottom:9px;font-size:1.35rem;line-height:1.15;font-weight:500}
+  .hero-banner p{color:var(--fg-2);font-size:13px;line-height:1.55;font-weight:300}
+  .hero-banner-link{
+    display:inline-flex;align-items:center;gap:8px;margin-top:18px;
+    color:var(--fg);font-family:'JetBrains Mono',monospace;font-size:11px;
+  }
+  .hero-banner-link span{color:var(--accent);transition:transform .2s ease}
+  .hero-banner-link:hover span{transform:translateX(4px)}
+
+  .catalog{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:42px}
+  .catalog-card{
+    display:flex;flex-direction:column;min-height:238px;padding:24px;
+    background:var(--panel);border:1px solid var(--line);border-radius:10px;
+    transition:border-color .25s ease,transform .25s ease,background .25s ease;
+  }
+  .catalog-card:hover{border-color:var(--line-2);background:#111113;transform:translateY(-3px)}
+  .catalog-type{color:var(--accent);font-family:'JetBrains Mono',monospace;font-size:10px;letter-spacing:.1em;text-transform:uppercase}
+  .catalog-card h3{font-size:17px;font-weight:500;margin:16px 0 8px}
+  .catalog-card p{color:var(--fg-2);font-size:13.5px;line-height:1.6;font-weight:300}
+  .catalog-tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
+  .catalog-tags span{color:var(--fg-3);font-family:'JetBrains Mono',monospace;font-size:10px}
+  .catalog-link{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    width:100%;margin-top:auto;padding:10px 14px;border:1px solid var(--line-2);
+    border-radius:6px;color:var(--fg);font-size:12px;font-weight:500;
+    transition:background .2s ease,border-color .2s ease;
+  }
+  .catalog-link:hover{background:var(--fg);border-color:var(--fg);color:var(--bg)}
+
+  /* scroll cue */
+  .scroll-cue{
+    position:absolute;left:50%;bottom:28px;transform:translateX(-50%);
+    z-index:4;
+    display:flex;flex-direction:column;align-items:center;gap:10px;
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;
+    color:var(--fg-3);letter-spacing:.14em;text-transform:uppercase;
+    pointer-events:none;
+  }
+  .scroll-cue .line{
+    width:1px;height:36px;background:linear-gradient(to bottom, rgba(255,255,255,.18), transparent);
+    position:relative;overflow:hidden;
+  }
+  .scroll-cue .line::after{
+    content:'';position:absolute;top:0;left:0;width:1px;height:12px;
+    background:var(--accent);
+    animation:slideDown 2.4s cubic-bezier(.6,0,.4,1) infinite;
+  }
+  @keyframes slideDown{
+    0%{transform:translateY(-12px);opacity:0}
+    30%{opacity:1}
+    100%{transform:translateY(36px);opacity:0}
+  }
+
+  /* ---------- SEÇÕES ---------- */
+  section{padding:var(--sec-y) 0;border-top:1px solid var(--line);position:relative}
+  .sec-head{margin-bottom:var(--head-gap)}
+  .sec-label{
+    font-family:'JetBrains Mono',monospace;font-size:12px;
+    color:var(--fg-3);letter-spacing:.04em;
+    display:flex;align-items:center;gap:10px;margin-bottom:18px;
+  }
+  .sec-label .num{color:var(--accent)}
+  .sec-label::after{content:'';height:1px;background:var(--line);width:60px}
+  h2{
+    font-size:clamp(1.6rem,3.2vw,2.1rem);
+    letter-spacing:-.025em;font-weight:500;line-height:1.2;
+    margin-bottom:18px;
+  }
+  .sec-intro{
+    color:var(--fg-2);max-width:620px;font-size:15.5px;font-weight:300;
+    line-height:1.7;
+  }
+
+  /* ---------- BIO ---------- */
+  .bio-grid{display:grid;grid-template-columns:1fr;gap:18px;max-width:760px}
+  .bio-grid p{color:var(--fg-2);font-weight:300;font-size:16px;line-height:1.75}
+  .bio-grid p strong{color:var(--fg);font-weight:500}
+
+  .facts{
+    display:grid;grid-template-columns:repeat(3,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);
+    border-radius:10px;overflow:hidden;margin-top:56px;
+  }
+  .fact{background:var(--bg-2);padding:24px 22px;display:flex;flex-direction:column;justify-content:space-between;min-height:104px}
+  .fact .n{
+    font-size:1.7rem;font-weight:500;letter-spacing:-.03em;
+    color:var(--fg);line-height:1;margin-bottom:10px;
+    font-variant-numeric:tabular-nums;
+  }
+  .fact .l{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    color:var(--fg-3);letter-spacing:.02em;
+  }
+
+  /* ---------- SERVIÇOS ---------- */
+  .services{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  .service{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:26px 24px;
+    transition:border-color .25s ease, background .25s ease;
+    position:relative;overflow:hidden;
+    display:flex;flex-direction:column;
+  }
+  .service::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(to right, transparent, rgba(185,162,132,.35), transparent);
+    opacity:0;transition:opacity .3s ease;
+  }
+  .service:hover{border-color:var(--line-2);background:#111113}
+  .service:hover::before{opacity:1}
+  .service-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:12px;
+    margin-bottom:18px;
+  }
+  .service h3{font-size:15.5px;font-weight:500;letter-spacing:-.01em;color:var(--fg)}
+  .service .count{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    color:var(--fg-3);white-space:nowrap;
+  }
+  .service ul{list-style:none}
+  .service li{
+    position:relative;padding-left:16px;
+    font-size:13.5px;color:var(--fg-2);font-weight:300;
+    line-height:1.6;margin-bottom:7px;
+  }
+  .service li:last-child{margin-bottom:0}
+  .service li::before{
+    content:'';position:absolute;left:0;top:.62em;
+    width:5px;height:1px;background:var(--fg-3);
+  }
+  .service .note{
+    font-size:11.5px;color:var(--fg-3);margin-top:14px;
+    padding-top:14px;border-top:1px dashed var(--line-2);
+    font-style:italic;line-height:1.5;
+  }
+
+  /* ---------- SKILLS ---------- */
+  .skills{
+    display:grid;grid-template-columns:repeat(2,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  }
+  .skill{background:var(--bg-2);padding:28px 26px;transition:background .25s ease}
+  .skill:hover{background:#0d0d0f}
+  .skill-head{
+    display:flex;align-items:baseline;justify-content:space-between;gap:14px;
+    margin-bottom:12px;
+  }
+  .skill h3{font-size:15.5px;font-weight:500;letter-spacing:-.01em}
+  .skill .level{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--fg-3)}
+  .skill p{font-size:13.5px;color:var(--fg-2);font-weight:300;line-height:1.65}
+
+  /* ---------- TRAJETÓRIA ---------- */
+  .timeline{max-width:860px}
+  .tl-item{
+    display:grid;grid-template-columns:76px 1fr;gap:26px;
+    padding:26px 0;border-top:1px solid var(--line);
+    position:relative;
+  }
+  .tl-item:last-child{border-bottom:1px solid var(--line)}
+  .tl-year{
+    font-family:'JetBrains Mono',monospace;font-size:12.5px;
+    color:var(--fg-3);letter-spacing:.01em;padding-top:3px;
+    position:relative;
+  }
+  .tl-year::after{
+    content:'';position:absolute;right:-7px;top:.68em;
+    width:5px;height:5px;border-radius:50%;
+    background:var(--bg);border:1px solid var(--line-2);
+  }
+  .tl-item.current .tl-year{color:var(--accent)}
+  .tl-item.current .tl-year::after{
+    background:var(--accent);border-color:var(--accent);
+    box-shadow:0 0 0 4px rgba(185,162,132,.12);
+  }
+  .tl-body h3{font-size:15.5px;font-weight:500;letter-spacing:-.01em;margin-bottom:7px}
+  .tl-body p{
+    font-size:14px;color:var(--fg-2);font-weight:300;line-height:1.65;
+    max-width:640px;
+  }
+
+  /* ---------- NÚMEROS ---------- */
+  .numbers{
+    display:grid;grid-template-columns:repeat(6,1fr);gap:1px;
+    background:var(--line);border:1px solid var(--line);border-radius:10px;overflow:hidden;
+  }
+  .num-cell{
+    background:var(--bg-2);padding:26px 20px;
+    transition:background .25s ease;
+    display:flex;flex-direction:column;
+  }
+  .num-cell:hover{background:#0d0d0f}
+  .num-cell .big{
+    font-size:2rem;font-weight:500;letter-spacing:-.035em;
+    line-height:1;color:var(--fg);margin-bottom:12px;
+    font-variant-numeric:tabular-nums;
+  }
+  .num-cell .name{
+    font-size:12.5px;color:var(--fg);font-weight:500;
+    letter-spacing:-.005em;margin-bottom:6px;
+  }
+  .num-cell .tags{
+    font-family:'JetBrains Mono',monospace;font-size:10.5px;
+    color:var(--fg-3);line-height:1.5;margin-top:auto;
+  }
+
+  /* ---------- DEPOIMENTOS ---------- */
+  .quotes{display:grid;grid-template-columns:repeat(2,1fr);gap:16px}
+  .quote{
+    background:var(--panel);border:1px solid var(--line);
+    border-radius:10px;padding:28px 26px;
+    display:flex;flex-direction:column;gap:22px;
+    transition:border-color .25s ease;
+    position:relative;overflow:hidden;
+  }
+  .quote::before{
+    content:'';position:absolute;top:0;left:0;right:0;height:1px;
+    background:linear-gradient(to right, transparent, rgba(185,162,132,.35), transparent);
+    opacity:0;transition:opacity .3s ease;
+  }
+  .quote:hover{border-color:var(--line-2)}
+  .quote:hover::before{opacity:1}
+  .quote p{font-size:14.5px;color:var(--fg-2);font-weight:300;line-height:1.7;flex:1}
+  .quote p::before{content:'“';color:var(--fg-3)}
+  .quote p::after{content:'”';color:var(--fg-3)}
+  .quote footer{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    color:var(--fg-3);letter-spacing:.01em;
+  }
+  .quote footer strong{color:var(--fg-2);font-weight:500}
+
+  /* ---------- CONTATO ---------- */
+  .contact-grid{display:grid;grid-template-columns:1.1fr 1fr;gap:56px;align-items:start}
+  .contact-list{display:flex;flex-direction:column}
+  .contact-item{
+    display:flex;align-items:center;justify-content:space-between;gap:20px;
+    padding:18px 0;border-bottom:1px solid var(--line);
+  }
+  .contact-item:first-child{border-top:1px solid var(--line)}
+  .contact-item .k{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    color:var(--fg-3);text-transform:uppercase;letter-spacing:.06em;
+  }
+  .contact-item .v{font-size:14.5px;color:var(--fg-2);font-weight:300;text-align:right}
+  .contact-item .v:hover{color:var(--fg)}
+
+  .contact-cta{
+    padding:32px 28px;border:1px solid var(--line);border-radius:10px;
+    background:var(--panel);position:relative;overflow:hidden;
+  }
+  .contact-cta::before{
+    content:'';position:absolute;top:-40%;right:-30%;width:220px;height:220px;
+    background:radial-gradient(circle, rgba(185,162,132,.10), transparent 65%);
+    pointer-events:none;
+  }
+  .contact-cta h3{font-size:17px;font-weight:500;letter-spacing:-.015em;margin-bottom:10px;position:relative}
+  .contact-cta p{
+    font-size:14px;color:var(--fg-2);font-weight:300;line-height:1.65;
+    margin-bottom:22px;position:relative;
+  }
+  .contact-cta .btn{width:100%;justify-content:center;position:relative}
+
+  /* ---------- FOOTER ---------- */
+  footer.site{border-top:1px solid var(--line);padding:36px 0 44px;position:relative}
+  .foot-inner{display:flex;align-items:center;justify-content:space-between;gap:20px;flex-wrap:wrap}
+  .foot-inner p{
+    font-family:'JetBrains Mono',monospace;font-size:11.5px;
+    color:var(--fg-3);letter-spacing:.02em;
+  }
+  .foot-inner .best{color:var(--fg-2)}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{
+    opacity:0;transform:translateY(14px);
+    transition:opacity .8s cubic-bezier(.16,1,.3,1), transform .8s cubic-bezier(.16,1,.3,1);
+    transition-delay:var(--d,0ms);
+  }
+  .reveal.in{opacity:1;transform:none}
+
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+    .reveal{opacity:1;transform:none}
+    html{scroll-behavior:auto}
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width:1180px){
+    .rail{display:none}
+  }
+  @media (max-width:900px){
+    .services{grid-template-columns:repeat(2,1fr)}
+    .numbers{grid-template-columns:repeat(3,1fr)}
+    .contact-grid{grid-template-columns:1fr;gap:40px}
+    .hero{min-height:92vh;padding:130px 0 100px}
+    h1{max-width:100%}
+  }
+  @media (max-width:760px){
+    :root{--pad:22px;--sec-y:76px;--head-gap:40px}
+    .nav-links{display:none}
+    .menu-btn{display:block}
+    .mobile-menu{display:block}
+    .hero{min-height:auto;padding:120px 0 96px}
+    .hero-banner{position:relative;right:auto;bottom:auto;width:auto;min-height:0;margin:42px var(--pad) 0}
+    /* em telas pequenas o scrim fica mais forte para o texto respirar */
+    .hero-overlay{
+      background:
+        linear-gradient(180deg,
+          rgba(10,10,11,.80) 0%,
+          rgba(10,10,11,.55) 30%,
+          rgba(10,10,11,.70) 70%,
+          var(--bg) 100%);
+    }
+    .scroll-cue{display:none}
+    .facts{grid-template-columns:repeat(2,1fr)}
+    .skills{grid-template-columns:1fr}
+    .quotes{grid-template-columns:1fr}
+    .services{grid-template-columns:1fr}
+    .catalog{grid-template-columns:1fr;margin-top:32px}
+    .numbers{grid-template-columns:repeat(2,1fr)}
+    .tl-item{grid-template-columns:64px 1fr;gap:18px;padding:22px 0}
+    .tl-year::after{display:none}
+    .foot-inner{flex-direction:column;align-items:flex-start;gap:12px}
+  }
+</style>
+</head>
+<body>
+
+<!-- rail de progresso -->
+<aside class="rail" aria-hidden="true">
+  <span class="pct">SCROLL</span>
+  <div class="track"><div class="fill" id="railFill"></div></div>
+  <span class="pct" id="railPct">00</span>
+</aside>
+
+<header id="nav">
+  <div class="wrap nav-inner">
+    <a href="#" class="brand">Samuel Soares</a>
+    <nav class="nav-links">
+      <a href="#bio">Bio</a>
+      <a href="#servicos">Serviços</a>
+      <a href="#skills">Skills</a>
+      <a href="#trajetoria">Trajetória</a>
+      <a href="#projetos">Projetos</a>
+      <a href="#depoimentos">Depoimentos</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <button class="menu-btn" id="menuBtn" aria-label="Abrir menu" aria-expanded="false">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round">
+        <path d="M3 7h18M3 12h18M3 17h18"/>
+      </svg>
+    </button>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="#bio">Bio</a>
+  <a href="#servicos">Serviços</a>
+  <a href="#skills">Skills</a>
+  <a href="#trajetoria">Trajetória</a>
+  <a href="#projetos">Projetos</a>
+  <a href="#depoimentos">Depoimentos</a>
+  <a href="#contato">Contato</a>
+</div>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+
+  <!-- =====================================================================
+       BANNER DO HERO — FULL-BLEED
+       Troque apenas o atributo src da tag <img> abaixo pela sua arte.
+       Ex.: <img src="banner.jpg" alt="">
+            <img src="https://imgs.search.brave.com/3a7oodGT3hmZrOuXYtI1f2DBiOXSmCLYv7HeTQKzhP0/rs:fit:500:0:1:0/g:ce/aHR0cHM6Ly9pbWcu/bWFnbmlmaWMuY29t/L2ZvdG9zLXByZW1p/dW0vYW5pbWUtZ2ly/bC1lbS1lc3RpbG8t/ZGUtYXJ0ZS1wcmV0/by1lLWJyYW5jb18x/MTUwMDI1LTY2NTY0/LmpwZz9zZW10PWFp/c19oeWJyaWQmdz03/NDAmcT04MA" alt="">
+       A imagem preenche a seção inteira (canto a canto) sem distorcer.
+       object-position controla o enquadramento (center, top, right…).
+       O placeholder atual é um SVG embutido — não quebra se você não mexer.
+       ===================================================================== -->
+  <div class="hero-bg">
+    <img
+      src="https://images.unsplash.com/photo-1498050108023-c5249f4df085?auto=format&fit=crop&w=1800&q=85"
+      alt=""
+      loading="eager">
+  </div>
+
+  <div class="hero-overlay"></div>
+  <div class="hero-dots"></div>
+
+  <div class="wrap hero-content">
+    <div class="eyebrow reveal"><span class="dot"></span> Disponível para novos projetos</div>
+    <div class="hero-signature reveal" style="--d:60ms">Provérbios 22:11, "Quem ama a sinceridade de coração e se expressa com elegância será amigo do rei"</div>
+    <h1 class="reveal" style="--d:120ms">
+      Samuel Soares
+      <span class="title-subtitle">ideias em produto.</span>
+    </h1>
+    <p class="role reveal" style="--d:120ms">
+      Full Stack <span class="sep">·</span> Automação <span class="sep">·</span> Security
+    </p>
+    <p class="lead reveal" style="--d:180ms">
+      Transformando ideias em soluções digitais de alto impacto. Mais de 7 anos criando
+      <strong>sites, sistemas, macros e automações</strong> — com foco em performance,
+      segurança e experiência do usuário.
+    </p>
+    <div class="hero-cta reveal" style="--d:240ms">
+      <a href="#contato" class="btn">Vamos conversar</a>
+      <a href="#projetos" class="btn btn-ghost">Ver projetos <span class="arrow">→</span></a>
+    </div>
+    <div class="stack reveal" style="--d:300ms">
+      <span>C++</span><span>C#</span><span>Python</span><span>JavaScript</span>
+      <span>Lua</span><span>SQL</span><span>React</span><span>Next</span>
+    </div>
+  </div>
+
+  <aside class="hero-banner reveal" style="--d:360ms">
+    <span class="hero-banner-label">Tecnologia com propósito</span>
+    <h2>Do problema real ao produto que funciona.</h2>
+    <p>Sites, sistemas e automações desenhados para simplificar processos e gerar resultado.</p>
+    <a class="hero-banner-link" href="#projetos">Explorar catálogo <span>→</span></a>
+  </aside>
+
+  <div class="scroll-cue" aria-hidden="true">
+    <span>Scroll</span>
+    <div class="line"></div>
+  </div>
+</section>
+
+<!-- ===================== BIO ===================== -->
+<section id="bio">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">01</span> Biografia</div>
+    </div>
+    <div class="bio-grid">
+      <p class="reveal">
+        Sou desenvolvedor full stack com <strong>mais de 7 anos de experiência</strong> em automação,
+        segurança e sistemas. Minha trajetória começou com macros e scripts para otimizar tarefas
+        repetitivas, evoluindo para aplicações desktop, APIs robustas e soluções web de ponta a ponta.
+      </p>
+      <p class="reveal" style="--d:80ms">
+        Hoje, combino <strong>C++, C#, Python, JavaScript e Lua</strong> para entregar projetos que unem
+        performance, design e escalabilidade. Sou apaixonado por resolver problemas complexos e
+        transformar ideias em produtos digitais funcionais e bem acabados.
+      </p>
+      <p class="reveal" style="--d:160ms">
+        Já atuei em <strong>mais de 40 projetos</strong>, entre landing pages, dashboards, e-commerces,
+        sistemas de gestão, bots de automação e ferramentas desktop. Meu foco é sempre entregar valor
+        com código limpo, documentação e boas práticas.
+      </p>
+    </div>
+
+    <div class="facts reveal">
+      <div class="fact"><div class="n">+40</div><div class="l">Projetos entregues</div></div>
+      <div class="fact"><div class="n">7+</div><div class="l">Anos de experiência</div></div>
+      <div class="fact"><div class="n">Full Stack</div><div class="l">Automação & Security</div></div>
+      <div class="fact"><div class="n">100%</div><div class="l">Código documentado</div></div>
+      <div class="fact"><div class="n">Personal</div><div class="l">Atendimento dedicado</div></div>
+      <div class="fact"><div class="n">Pós-entrega</div><div class="l">Suporte contínuo</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SERVIÇOS ===================== -->
+<section id="servicos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">02</span> Serviços & Soluções</div>
+      <h2 class="reveal">O que eu construo</h2>
+      <p class="sec-intro reveal" style="--d:80ms">
+        Do rascunho ao deploy. Cada entrega é feita com código limpo, documentação e foco no
+        resultado — não apenas no código.
+      </p>
+    </div>
+
+    <div class="services">
+      <div class="service reveal">
+        <div class="service-head"><h3>Sites & Landing Pages</h3><span class="count">+12</span></div>
+        <ul>
+          <li>8 landing pages responsivas</li>
+          <li>3 dashboards interativos</li>
+          <li>1 e-commerce com Next.js</li>
+          <li>SEO e performance otimizados</li>
+        </ul>
+      </div>
+
+      <div class="service reveal" style="--d:60ms">
+        <div class="service-head"><h3>Sistemas de Gestão</h3><span class="count">+7</span></div>
+        <ul>
+          <li>Estoque, Financeiro, Vendas</li>
+          <li>C# · .NET · SQL</li>
+          <li>Relatórios e gráficos</li>
+          <li>Controle de usuários e permissões</li>
+        </ul>
+      </div>
+
+      <div class="service reveal" style="--d:120ms">
+        <div class="service-head"><h3>Macros & Automação</h3><span class="count">+20</span></div>
+        <ul>
+          <li>Automação em Excel, jogos e apps</li>
+          <li>Lua · Python · AHK</li>
+          <li>Redução de erros manuais</li>
+          <li>Aumento de produtividade</li>
+        </ul>
+      </div>
+
+      <div class="service reveal" style="--d:180ms">
+        <div class="service-head"><h3>Programas Desktop</h3><span class="count">+9</span></div>
+        <ul>
+          <li>Interface amigável e performática</li>
+          <li>C++ · C# · Python</li>
+          <li>Ferramentas CLI e APIs</li>
+          <li>Integração com sistemas</li>
+        </ul>
+      </div>
+
+      <div class="service reveal" style="--d:240ms">
+        <div class="service-head"><h3>Bots & RPA</h3><span class="count">+15</span></div>
+        <ul>
+          <li>RPA com Selenium e PyAutoGUI</li>
+          <li>Bots para Discord / Telegram</li>
+          <li>Envio de mensagens em massa</li>
+          <li>Integração entre plataformas</li>
+        </ul>
+      </div>
+
+      <div class="service reveal" style="--d:300ms">
+        <div class="service-head"><h3>Segurança & Integrações</h3><span class="count">+12</span></div>
+        <ul>
+          <li>Autenticação e gestão de sessões</li>
+          <li>Integração com APIs externas</li>
+          <li>Testes de segurança em apps</li>
+          <li>Boas práticas de hardening</li>
+        </ul>
+        <p class="note">Trabalho voltado a estudos, testes autorizados e hardening defensivo.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== SKILLS ===================== -->
+<section id="skills">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">03</span> Linguagens & Tecnologias</div>
+      <h2 class="reveal">Stack técnica</h2>
+      <p class="sec-intro reveal" style="--d:80ms">
+        Ferramentas que uso no dia a dia — escolhidas por projeto, não por moda.
+      </p>
+    </div>
+
+    <div class="skills">
+      <div class="skill reveal">
+        <div class="skill-head"><h3>C++</h3><span class="level">Avançado · 7+ anos</span></div>
+        <p>Performance máxima para sistemas desktop, jogos e aplicações de baixo nível. Domínio de ponteiros, STL e otimização.</p>
+      </div>
+      <div class="skill reveal" style="--d:60ms">
+        <div class="skill-head"><h3>C#</h3><span class="level">Avançado · 6+ anos</span></div>
+        <p>Ecossistema .NET para sistemas de gestão, APIs e aplicações empresariais. Entity Framework, LINQ e boas práticas.</p>
+      </div>
+      <div class="skill reveal" style="--d:120ms">
+        <div class="skill-head"><h3>Python</h3><span class="level">Avançado · 6+ anos</span></div>
+        <p>Automação, RPA, scripts de dados e bots. Uso intensivo de Selenium, PyAutoGUI, Pandas e Flask.</p>
+      </div>
+      <div class="skill reveal" style="--d:180ms">
+        <div class="skill-head"><h3>JavaScript</h3><span class="level">Avançado · 5+ anos</span></div>
+        <p>Front-end moderno com React, Next.js e Tailwind. Crio interfaces interativas e responsivas.</p>
+      </div>
+      <div class="skill reveal" style="--d:240ms">
+        <div class="skill-head"><h3>Lua</h3><span class="level">Intermediário · 4+ anos</span></div>
+        <p>Macros avançadas, scripts para jogos e automação leve. Integração com C/C++ para performance.</p>
+      </div>
+      <div class="skill reveal" style="--d:300ms">
+        <div class="skill-head"><h3>SQL</h3><span class="level">Avançado · 6+ anos</span></div>
+        <p>Modelagem de dados, consultas complexas e otimização. Uso com MySQL, PostgreSQL e SQL Server.</p>
+      </div>
+      <div class="skill reveal" style="--d:360ms">
+        <div class="skill-head"><h3>React & Next</h3><span class="level">Avançado · 4+ anos</span></div>
+        <p>Desenvolvimento de SPAs, SSR e SSG. Componentes reutilizáveis, hooks e otimização de performance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== TRAJETÓRIA ===================== -->
+<section id="trajetoria">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">04</span> Trajetória</div>
+      <h2 class="reveal">Oito anos em linha</h2>
+      <p class="sec-intro reveal" style="--d:80ms">
+        Do primeiro script ao trabalho com empresas consolidadas.
+      </p>
+    </div>
+
+    <div class="timeline">
+      <div class="tl-item reveal">
+        <div class="tl-year">2018</div>
+        <div class="tl-body">
+          <h3>Início com Automação</h3>
+          <p>Comecei criando macros em Lua e AHK para automatizar tarefas em jogos e planilhas. Primeiros scripts comerciais.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2019</div>
+        <div class="tl-body">
+          <h3>Primeiros Sistemas Web</h3>
+          <p>Migrei para desenvolvimento web com PHP e JavaScript. Criei sistemas de cadastro e dashboards para pequenas empresas.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2020</div>
+        <div class="tl-body">
+          <h3>Especialização em C# e .NET</h3>
+          <p>Comecei a desenvolver sistemas de gestão completos com C#, Entity Framework e SQL Server. Primeiros projetos empresariais.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2021</div>
+        <div class="tl-body">
+          <h3>Full Stack com React e Next</h3>
+          <p>Adotei o ecossistema React para front-end e Next.js para SSR. Criei landing pages, e-commerces e dashboards interativos.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2022</div>
+        <div class="tl-body">
+          <h3>Automação Avançada com Python</h3>
+          <p>Expandi meu portfólio com RPA, bots para Discord/Telegram e integrações com APIs. Mais de 20 scripts entregues.</p>
+        </div>
+      </div>
+      <div class="tl-item reveal">
+        <div class="tl-year">2023</div>
+        <div class="tl-body">
+          <h3>Segurança e Performance</h3>
+          <p>Foquei em otimização de performance, SEO e segurança em todos os projetos. Mais de 40 projetos entregues com alta qualidade.</p>
+        </div>
+      </div>
+      <div class="tl-item current reveal">
+        <div class="tl-year">2024 — 2026</div>
+        <div class="tl-body">
+          <h3>Consultoria e Projetos Personalizados</h3>
+          <p>Atendo clientes com soluções sob medida, desde landing pages até sistemas complexos. Suporte contínuo e evolução constante. Em 2026, continuo expandindo meu portfólio com novas tecnologias e abordagens inovadoras.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== PROJETOS ===================== -->
+<section id="projetos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">05</span> Projetos em Números</div>
+      <h2 class="reveal">Volume entregue</h2>
+      <p class="sec-intro reveal" style="--d:80ms">
+        Resumo por categoria do que já passou pelas minhas mãos.
+      </p>
+    </div>
+
+    <div class="numbers">
+      <div class="num-cell reveal">
+        <div class="big">8</div>
+        <div class="name">Landing Pages</div>
+        <div class="tags">React · Next · Tailwind</div>
+      </div>
+      <div class="num-cell reveal" style="--d:50ms">
+        <div class="big">3</div>
+        <div class="name">Dashboards</div>
+        <div class="tags">React · Chart.js · API</div>
+      </div>
+      <div class="num-cell reveal" style="--d:100ms">
+        <div class="big">1</div>
+        <div class="name">E-commerce</div>
+        <div class="tags">Next · Stripe · Tailwind</div>
+      </div>
+      <div class="num-cell reveal" style="--d:150ms">
+        <div class="big">+7</div>
+        <div class="name">Sistemas de Gestão</div>
+        <div class="tags">C# · .NET · SQL</div>
+      </div>
+      <div class="num-cell reveal" style="--d:200ms">
+        <div class="big">+20</div>
+        <div class="name">Macros & Scripts</div>
+        <div class="tags">Lua · Python · AHK</div>
+      </div>
+      <div class="num-cell reveal" style="--d:250ms">
+        <div class="big">+15</div>
+        <div class="name">Bots & RPA</div>
+        <div class="tags">Python · Selenium</div>
+      </div>
+    </div>
+
+    <div class="catalog">
+      <article class="catalog-card reveal">
+        <span class="catalog-type">Landing page</span>
+        <h3>QYEF</h3>
+        <p>Vista sua equipe com Uniformes de alto padrão Camisas 100% algodão, canecas e ecobags personalizadas com a sua logo. O acabamento profissional que sua empresa, evento ou escola merece, a partir de 10 unidades.</p>
+        <div class="catalog-tags"><span>Design</span><span>Performance</span><span>SEO</span></div>
+        <a class="catalog-link" href="https://qyef.netlify.app/" target="_blank" rel="noopener">Ver site <span>↗</span></a>
+      </article>
+      <article class="catalog-card reveal" style="--d:80ms">
+        <span class="catalog-type">Landing page</span>
+        <h3>BILLERS Academy</h3>
+        <p>Treino sério, ambiente que faz bem. A Billers Academia reúne musculação, pilates e personal trainers em um espaço climatizado, organizado e distribuído em três pavimentos — pensado para o seu treino render mais, do primeiro ao último dia.</p>
+        <div class="catalog-tags"><span>React</span><span>API</span><span>Dashboard</span></div>
+        <a class="catalog-link" href="https://billersacademy.netlify.app/" target="_blank" rel="noopener">Ver site <span>↗</span></a>
+      </article>
+      <article class="catalog-card reveal" style="--d:160ms">
+        <span class="catalog-type">Landing page</span>
+        <h3>TRUTH Astoria</h3>
+        <p>TRUTH Astoria Modern Asian Fusion Where culinary excellence meets sophistication. Dinner • Cocktails • Music</p>
+        <div class="catalog-tags"><span>Python</span><span>RPA</span><span>Integração</span></div>
+        <a class="catalog-link" href="https://astoriabeer.netlify.app/" target="_blank" rel="noopener">Ver site <span>↗</span></a>
+      </article>
+      <article class="catalog-card reveal" style="--d:240ms">
+        <span class="catalog-type">Landing page</span>
+        <h3>BARBOCCA BARBEARIA</h3>
+        <p>BARBOCCA BARBEARIA — um espaço no coração do Cambuí, Campinas, onde estilo e tradição se encontram. Cortes de cabelo e barba com qualidade e atendimento que fazem a diferença.</p>
+        <div class="catalog-tags"><span>Next.js</span><span>Stripe</span><span>UX</span></div>
+        <a class="catalog-link" href="https://barboccabarber.netlify.app/" target="_blank" rel="noopener">Ver site <span>↗</span></a>
+      </article>
+      <article class="catalog-card reveal" style="--d:320ms">
+        <span class="catalog-type">Dashboard</span>
+        <h3>PDV system</h3>
+        <p>PDV Completopara seu negócio, Lanchonetes, restaurantes, lojas de varejo e comércios. Controle de estoque, comandas, leitor de código de barras, sangria, prazos e muito mais.</p>
+        <div class="catalog-tags"><span>Charts</span><span>API</span><span>Dados</span></div>
+        <a class="catalog-link" href="https://manualpdv.netlify.app/" target="_blank" rel="noopener">Ver site <span>↗</span></a>
+      </article>
+      <article class="catalog-card reveal" style="--d:400ms">
+        <span class="catalog-type">Landing page</span>
+        <h3>PET SHOP SÃO FRANCISCO</h3>
+        <p>"Tudo para seu animal de estimação" Ração, acessórios, medicamentos e muito mais. Cuidado e carinho para o seu melhor amigo.</p>
+        <div class="catalog-tags"><span>APIs</span><span>Webhooks</span><span>Automação</span></div>
+        <a class="catalog-link" href="https://petshopsanfrancisco.netlify.app/" target="_blank" rel="noopener">Ver site <span>↗</span></a>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== DEPOIMENTOS ===================== -->
+<section id="depoimentos">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">06</span> Depoimentos</div>
+      <h2 class="reveal">O que dizem por aí</h2>
+      <p class="sec-intro reveal" style="--d:80ms">
+        Algumas palavras de quem já trabalhou comigo.
+      </p>
+    </div>
+
+    <div class="quotes">
+      <div class="quote reveal">
+        <p>O site que ele fez para minha empresa aumentou as vendas em 40% em apenas 2 meses. Design impecável e performance incrível.</p>
+        <footer><strong>Carlos Mendes</strong> · CEO da TechStore</footer>
+      </div>
+      <div class="quote reveal" style="--d:60ms">
+        <p>Precisava de um sistema de gestão personalizado e ele entregou em tempo recorde. Profissional extremamente competente.</p>
+        <footer><strong>Fernanda Lima</strong> · Gerente de Operações</footer>
+      </div>
+      <div class="quote reveal" style="--d:120ms">
+        <p>As automações que ele criou para minha equipe economizaram mais de 20 horas por semana. Recomendo sem reservas.</p>
+        <footer><strong>Rafael Souza</strong> · Coordenador de TI</footer>
+      </div>
+      <div class="quote reveal" style="--d:180ms">
+        <p>Profissional completo: entende de front-end, back-end, automação e segurança. Um dos melhores com quem já trabalhei.</p>
+        <footer><strong>Mariana Costa</strong> · Product Manager</footer>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===================== CONTATO ===================== -->
+<section id="contato">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="sec-label reveal"><span class="num">07</span> Contato</div>
+      <h2 class="reveal">Vamos construir algo juntos</h2>
+      <p class="sec-intro reveal" style="--d:80ms">
+        Atendimento remoto e presencial (SP). Respondo em até 24h úteis.
+      </p>
+    </div>
+
+    <div class="contact-grid">
+      <div class="contact-list reveal">
+        <div class="contact-item">
+          <span class="k">Telefone</span>
+          <a class="v" href="tel:+5519996511725">(19) 99651-1725</a>
+        </div>
+        <div class="contact-item">
+          <span class="k">E-mail</span>
+          <a class="v" href="mailto:samuelsoares.4p@gmail.com">samuelsoares.4p@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <span class="k">Horário</span>
+          <span class="v">Seg a Sex, 9h — 20h</span>
+        </div>
+        <div class="contact-item">
+          <span class="k">Local</span>
+          <span class="v">São Paulo · Remoto e presencial</span>
+        </div>
+        <div class="contact-item">
+          <span class="k">Status</span>
+          <span class="v" style="color:var(--Black)">● Disponível para projetos</span>
+        </div>
+      </div>
+
+      <div class="contact-cta reveal" style="--d:120ms">
+        <h3>Prefere falar direto?</h3>
+        <p>Me chama no WhatsApp que a gente alinha escopo, prazo e valor em poucos minutos.</p>
+        <a class="btn" href="https://wa.me/5519996511725" target="_blank" rel="noopener">
+          Falar no WhatsApp <span class="arrow">→</span>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="site">
+  <div class="wrap foot-inner">
+    <p>DEV <span style="color:var(--accent)">@_esieme</span> · Full Stack · Automação · Security</p>
+    <p class="best">— The Best Developer</p>
+  </div>
+</footer>
+
+<script>
+  // header border on scroll
+  const nav = document.getElementById('nav');
+  const onScroll = () => nav.classList.toggle('scrolled', window.scrollY > 8);
+  onScroll();
+  window.addEventListener('scroll', onScroll, {passive:true});
+
+  // Reduz levemente a foto conforme o hero sai da tela, sem apaga-la.
+  const hero = document.querySelector('.hero');
+  const heroImage = document.querySelector('.hero-bg img');
+  const updateHeroImage = () => {
+    const progress = Math.min(1, Math.max(0, -hero.getBoundingClientRect().top / hero.offsetHeight));
+    heroImage.style.opacity = String(1 - progress * .42);
+    heroImage.style.transform = `scale(${1 + progress * .035}) translateY(${progress * -12}px)`;
+  };
+  updateHeroImage();
+  window.addEventListener('scroll', updateHeroImage, {passive:true});
+
+  // mobile menu
+  const menuBtn = document.getElementById('menuBtn');
+  const mobileMenu = document.getElementById('mobileMenu');
+  menuBtn.addEventListener('click', () => {
+    const open = mobileMenu.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', open);
+  });
+  mobileMenu.querySelectorAll('a').forEach(a =>
+    a.addEventListener('click', () => {
+      mobileMenu.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    })
+  );
+
+  // reveal on scroll
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('in');
+        io.unobserve(e.target);
+      }
+    });
+  }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+
+  document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+  // rail de progresso
+  const railFill = document.getElementById('railFill');
+  const railPct  = document.getElementById('railPct');
+  const updateRail = () => {
+    const h = document.documentElement;
+    const max = h.scrollHeight - h.clientHeight;
+    const p = max > 0 ? (h.scrollTop / max) * 100 : 0;
+    railFill.style.height = p + '%';
+    railPct.textContent = String(Math.round(p)).padStart(2, '0');
+  };
+  updateRail();
+  window.addEventListener('scroll', updateRail, {passive:true});
+  window.addEventListener('resize', updateRail);
+</script>
+
+</body>
+</html>
